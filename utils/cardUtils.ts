@@ -45,6 +45,13 @@ export type cardDataType={
     path:any,
     name:string
 }
+export const cardUtil={
+    CARD_ADVENTURER:{
+        path:require('../assets/images/Adventurer.png'),
+        name:'Adventurer',
+        mergeableTo:'Alchemist'
+    }
+}
 export const CardData:cardDataType[]=[
     {path:require('../assets/images/Adventurer.png'), name:CARD_ADVENTURER},
     {path:require('../assets/images/Alchemist.png'), name:CARD_ALCHEMIST},

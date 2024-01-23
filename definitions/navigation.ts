@@ -1,12 +1,14 @@
 import { CommonActions, createNavigationContainerRef } from "@react-navigation/native";
 import {
     PATH_HOME,
-    PATH_CARD_BOOK
+    PATH_CARD_BOOK,
+    PATH_GAME
   } from '../utils/constants';
 
 export type RootStackParamList = {
     [PATH_HOME]: undefined;
     [PATH_CARD_BOOK]: undefined;
+    [PATH_GAME]: undefined;
 
   };
 

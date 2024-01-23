@@ -2,13 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { cardDataType } from '../../utils/cardUtils'
-import { COLOR_BANANA_MANIA, COLOR_BLACK } from '../../utils/colors'
+import { COLOR_BANANA_MANIA, COLOR_BLACK, COLOR_DELI_YELLOW } from '../../utils/colors'
 
- const CardBookItem= React.memo(({path,name}:cardDataType)=> { 
+ const CardBookItem= React.memo(({onPress,path,name,highlighted}:any)=> { 
+    
   return (
-    <Pressable style={styles.card_item_container}>
+    <Pressable onPress={onPress} style={[styles.card_item_container,highlighted && {borderColor:COLOR_DELI_YELLOW}]} >
         <Image style={styles.card_image} source={path}></Image>
-        <View style={styles.card_footer}>
+        <View style={[styles.card_footer,highlighted && {backgroundColor:COLOR_DELI_YELLOW}]}>
             <Text style={styles.cardText}>{name}</Text>
         </View>
     </Pressable>
@@ -17,7 +18,7 @@ import { COLOR_BANANA_MANIA, COLOR_BLACK } from '../../utils/colors'
 
 const styles=StyleSheet.create({
     card_image:{
-        width:80,
+        width:78,
         height:78,
         resizeMode:'stretch',
     },
@@ -29,7 +30,7 @@ const styles=StyleSheet.create({
         borderColor:COLOR_BLACK  
     },
     card_footer:{
-       width:80,
+       width:78,
        height:25,
        textAlign:'center',    
        backgroundColor:COLOR_BANANA_MANIA 
