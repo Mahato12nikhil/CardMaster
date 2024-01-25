@@ -22,3 +22,8 @@ export type RootStackParamList = {
       navigationRef.dispatch(CommonActions.navigate(routeName, params));
     }
   }
+  export function goBack() {
+    if (navigationRef.isReady()) {
+      navigationRef.dispatch(CommonActions.goBack());
+    }
+  }

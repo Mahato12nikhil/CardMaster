@@ -17,7 +17,10 @@ export interface BlockData {
 const Game = () => {
   const [blocks, setBlocks] = useState<BlockData[]>([...Array(100).fill({})]);
   const [isCardMoving, setIsCardMoving] = useState(false);
-  const [capturedBlocks,setCapturedBlocks]=useState<BlockParams[]>([])
+  const [level,setLevel]=useState<number>(0);
+  const [floatPoint, setFloatPoint]=useState<number>(0)
+  const [totalPoint, setTotalPoint]=useState<number>(0);
+  const [isBoardUpdated,setIsBoardUpdated]=useState<boolean>(false)
 
   const updateCardPosition = (newPosition: { x: number; y: number }) => {
     setCardPosition(newPosition);
@@ -36,19 +39,23 @@ const Game = () => {
             style={styles.back_image}
             source={require('../../assets/images/background.png')}
           />
-          <Text style={{fontFamily:'BalooPaaji', fontSize:20,textAlign:'right',marginRight:10}}>+10</Text>
+          <Text style={{fontFamily:'BalooPaaji', fontSize:20,textAlign:'right',marginRight:10}}>{floatPoint!==0?(floatPoint>0?'+':'-')+floatPoint:' '}</Text>
           
          <BlockContent
             blocks={blocks}
             cardPosition={cardPosition}
             isCardMoving={isCardMoving}
-            highlightedBlock={highlightedBlock}
-            setHighlightedBlock={setHighlightedBlock}
             setIsCardMoving={setIsCardMoving}
             updateCardPosition={updateCardPosition}
-            capturedBlocks={capturedBlocks}
             setBlocks={setBlocks}
-            setCapturedBlocks={setCapturedBlocks}
+            level={level}
+            setLevel={setLevel}
+            floatPoint={floatPoint}
+            setFloatPoint={setFloatPoint}
+            totalPoint={totalPoint}
+            setTotalPoint={setTotalPoint}
+            isBoardUpdated={isBoardUpdated}
+            setIsBoardUpdated={setIsBoardUpdated}
           />
           <RenderCards />
         </View>

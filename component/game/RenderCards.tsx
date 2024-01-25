@@ -16,7 +16,7 @@ const RenderCards = () => {
     dispatch(updateTopCard(firstCard));
     const first8Cards = shuffledCards.slice(1, 8);
     setSelectedCards(first8Cards);
-  }, [dispatch]);
+  }, []);
 
   // Function to shuffle an array using Fisher-Yates algorithm
   const shuffleArray = (array: cardDataType[]) => {

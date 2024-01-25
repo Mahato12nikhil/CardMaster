@@ -59,7 +59,7 @@ function App(): React.JSX.Element {
     <NavigationContainer ref={navigationRef}>
     <StatusBar animated={true}/>
     <View style={styles.wrapper}>
-      <RootStack.Navigator initialRouteName={PATH_GAME}>
+      <RootStack.Navigator initialRouteName={PATH_HOME}>
       <RootStack.Screen
           name={PATH_HOME}
           options={{header: noHeader}}

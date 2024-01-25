@@ -10,32 +10,40 @@ import { useAppSelector } from '../../redux/customHooks';
 import { BlockData, BlockParams } from './Game';
 import { CardData,cardDataType } from '../../utils/cardUtils';
 import mergeData from '../../data/card-merge-info.json';
-import { updateBlock } from './blockUtils';
+import { getPositonPoint, updateBlock } from './blockUtils';
 
 interface BlockContentProps {
   blocks: BlockData[];
   cardPosition: { x: number; y: number };
   isCardMoving: boolean;
-  highlightedBlock: { row: number; col: number } | null;
-  setHighlightedBlock: React.Dispatch<React.SetStateAction<{ row: number; col: number } | null>>;
   setIsCardMoving: React.Dispatch<React.SetStateAction<boolean>>;
   updateCardPosition: (newPosition: { x: number; y: number }) => void;
-  capturedBlocks: BlockParams[];
   setBlocks:Dispatch<SetStateAction<BlockData[]>>
-  setCapturedBlocks: React.Dispatch<React.SetStateAction<BlockParams[]>>;
+  level:number,
+  setLevel:Dispatch<SetStateAction<number>>;
+  floatPoint:number;
+  setFloatPoint:Dispatch<SetStateAction<number>>;
+  totalPoint:number;
+  setTotalPoint:Dispatch<SetStateAction<number>>
+  isBoardUpdated:boolean
+  setIsBoardUpdated:Dispatch<SetStateAction<boolean>>
 }
 
 const BlockContent: React.FC<BlockContentProps> = ({
   blocks,
   cardPosition,
   isCardMoving,
-  highlightedBlock,
-  setHighlightedBlock,
   setIsCardMoving,
   updateCardPosition,
-  capturedBlocks,
   setBlocks,
-  setCapturedBlocks,
+  level,
+  setLevel,
+  floatPoint,
+  setFloatPoint,
+  totalPoint,
+  setTotalPoint,
+  isBoardUpdated,
+  setIsBoardUpdated
 }) => {
   const { card } = useAppSelector(state => state.card);
   const BLOCK_SIZE = 33;
@@ -56,20 +64,22 @@ const BlockContent: React.FC<BlockContentProps> = ({
       
         setMovingCardPosition(nearestBlock)
         setReleasePoint(nearestBlock)
-       
+        setFloatPoint(getPositonPoint(blocks,nearestBlock,card,isBoardUpdated));
       
       if (!isCardMoving) setIsCardMoving(!isCardMoving);
     },
     onRelease: gesture => {
       if(releasePoint.row>=0 && releasePoint.row<10 && releasePoint.col>=0 && releasePoint.col<10){
-        updateBlock({releasePoint, card, setBlocks});
+        updateBlock({releasePoint, card, setBlocks,setTotalPoint,isBoardUpdated});
       }   
       console.log(blocks)
+      setIsBoardUpdated(true)
       setIsCardMoving(false);
       updateCardPosition({
         x: 0,
         y: 328,
       });
+      setFloatPoint(0)
     },
   });
 
@@ -95,7 +105,6 @@ const BlockContent: React.FC<BlockContentProps> = ({
                       source={require('../../assets/images/Archer.png')}
                       style={{ height: 34, width: 34, borderRadius: 3, borderWidth: 1, borderColor: 'red', resizeMode: 'cover' }}
                     />
-                  
                     :
                     <Image
                       width={BLOCK_SIZE}

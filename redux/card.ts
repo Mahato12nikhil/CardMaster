@@ -13,7 +13,7 @@ const initialState:cardState  = {
 };
 
 const cardSlice = createSlice({
-  name: 'gameSlice',
+  name: 'cardSlice',
   initialState,
   reducers: {
     updateTopCard: (

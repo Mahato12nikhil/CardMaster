@@ -1,12 +1,15 @@
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { COLOR_BANANA_MANIA, COLOR_BLACK } from '../../utils/colors'
 import { HEADER_HEIGHT } from '../../utils/constants'
+import { goBack } from '../../definitions/navigation'
 
 export default function CardBookHeader() {
   return (
     <View style={styles.card_book_header_container}>
-        <Image source={require('../../assets/images/back.png')}></Image>
+        <Pressable onPress={goBack}>
+         <Image source={require('../../assets/images/back.png')} />
+      </Pressable>
         <Text style={styles.headerText}>Tile Book</Text>
     </View>
   )
