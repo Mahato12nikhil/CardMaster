@@ -6,11 +6,13 @@ import CardBookItem from '../card book/CardBookItem';
 import RenderCards from './RenderCards';
 import { COLOR_BANANA_MANIA, COLOR_BLACK, COLOR_DELI_YELLOW } from '../../utils/colors';
 import usePanResponder from './PanResponderUtils';
-import { useAppSelector } from '../../redux/customHooks';
+import { useAppDispatch, useAppSelector } from '../../redux/customHooks';
 import { BlockData, BlockParams } from './Game';
 import { CardData,cardDataType } from '../../utils/cardUtils';
 import mergeData from '../../data/card-merge-info.json';
-import { getPositonPoint, updateBlock } from './blockUtils';
+import { getPositonPoint, updateBlock, updateSetBlock } from './blockUtils';
+import { updateBlocks, updateLevel, updatePoint, updateTurn } from '../../redux/gameSlice';
+import { GAME_BASE_POINT, LEVEL_INCREASE_POINT, TURN_DECREMENT, TURN_INCREMENT } from '../../utils/constants';
 
 interface BlockContentProps {
   blocks: BlockData[];
@@ -18,13 +20,8 @@ interface BlockContentProps {
   isCardMoving: boolean;
   setIsCardMoving: React.Dispatch<React.SetStateAction<boolean>>;
   updateCardPosition: (newPosition: { x: number; y: number }) => void;
-  setBlocks:Dispatch<SetStateAction<BlockData[]>>
-  level:number,
-  setLevel:Dispatch<SetStateAction<number>>;
   floatPoint:number;
   setFloatPoint:Dispatch<SetStateAction<number>>;
-  totalPoint:number;
-  setTotalPoint:Dispatch<SetStateAction<number>>
   isBoardUpdated:boolean
   setIsBoardUpdated:Dispatch<SetStateAction<boolean>>
 }
@@ -35,17 +32,12 @@ const BlockContent: React.FC<BlockContentProps> = ({
   isCardMoving,
   setIsCardMoving,
   updateCardPosition,
-  setBlocks,
-  level,
-  setLevel,
   floatPoint,
   setFloatPoint,
-  totalPoint,
-  setTotalPoint,
-  isBoardUpdated,
-  setIsBoardUpdated
 }) => {
   const { card } = useAppSelector(state => state.card);
+  const { totalPoint,level,turn,isBoardUpdated } = useAppSelector(state => state.game);
+  const dispatch=useAppDispatch()
   const BLOCK_SIZE = 33;
   const screenWidth = Dimensions.get('window').width;
   const totalWidth = 10 * BLOCK_SIZE;
@@ -55,6 +47,10 @@ const BlockContent: React.FC<BlockContentProps> = ({
 
   const panResponder = usePanResponder({
     onMove: gesture => {
+      if(turn===15){
+        ToastAndroid.show('you have no turn left', ToastAndroid.SHORT)
+        return
+      }
       const { dx, dy } = gesture;
       updateCardPosition({
         x: cardPosition.x + dx,
@@ -69,17 +65,28 @@ const BlockContent: React.FC<BlockContentProps> = ({
       if (!isCardMoving) setIsCardMoving(!isCardMoving);
     },
     onRelease: gesture => {
-      if(releasePoint.row>=0 && releasePoint.row<10 && releasePoint.col>=0 && releasePoint.col<10){
-        updateBlock({releasePoint, card, setBlocks,setTotalPoint,isBoardUpdated});
-      }   
-      console.log(blocks)
-      setIsBoardUpdated(true)
-      setIsCardMoving(false);
       updateCardPosition({
         x: 0,
         y: 328,
       });
+      setIsCardMoving(false);
+      if(releasePoint.row>=0 && releasePoint.row<10 && releasePoint.col>=0 && releasePoint.col<10){
+        const {updatedBlocks,isCardPlaced,imgIndex}=updateSetBlock(blocks,card,releasePoint,isBoardUpdated,dispatch)
+        dispatch(updateBlocks(updatedBlocks))
+        if(isCardPlaced){
+          dispatch(updatePoint( {lastPoint:floatPoint,lastUpdatedIndex:imgIndex}))
+          dispatch(updateTurn(TURN_DECREMENT))
+        }
+      }   
+      const levelTargetPoint=(level*LEVEL_INCREASE_POINT)+GAME_BASE_POINT
+
+      if(totalPoint+floatPoint>=levelTargetPoint){
+        dispatch(updateLevel()) 
+        dispatch(updateBlocks([...Array(100).fill({})]))
+      }
+      //console.log(blocks)
       setFloatPoint(0)
+      setMovingCardPosition(null)
     },
   });
 
@@ -102,7 +109,7 @@ const BlockContent: React.FC<BlockContentProps> = ({
                   <Image
                       width={BLOCK_SIZE}
                       height={BLOCK_SIZE}
-                      source={require('../../assets/images/Archer.png')}
+                      source={card.path}
                       style={{ height: 34, width: 34, borderRadius: 3, borderWidth: 1, borderColor: 'red', resizeMode: 'cover' }}
                     />
                     :
@@ -128,7 +135,7 @@ const BlockContent: React.FC<BlockContentProps> = ({
                     <Image
                         width={BLOCK_SIZE}
                         height={BLOCK_SIZE}
-                        source={require('../../assets/images/Archer.png')}
+                        source={card.path}
                         style={{ height: 34, width: 34, borderRadius: 3, borderWidth: 1, borderColor: 'black', resizeMode: 'cover' }}
                       />
                   </View>

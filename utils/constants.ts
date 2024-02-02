@@ -5,3 +5,6 @@ export const PATH_GAME='Game'
 export const BASE_POINT=10
 export const LEVEL_INCREASE_POINT=250
 export const GAME_BASE_POINT=500
+export const TOTAL_TURN=15
+export const TURN_DECREMENT=1 
+export const TURN_INCREMENT=-1

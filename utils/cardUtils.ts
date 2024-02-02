@@ -59,7 +59,7 @@ export const CardData:cardDataType[]=[
     {path:require('../assets/images/Astronomer.png'), name:CARD_ASTRONOMER},
     {path:require('../assets/images/Bard.png'), name:CARD_BARD},
     {path:require('../assets/images/Bartender.png'), name:CARD_BARTENDER},
-    {path:require('../assets/images/Beggar.png'), name:CARD_ADVENTURER},
+    {path:require('../assets/images/Beggar.png'), name:CARD_BEGGER},
     {path:require('../assets/images/Blacksmith.png'), name:CARD_BLACKSMITH},
     {path:require('../assets/images/Butcher.png'), name:CARD_BUTCHER},
     {path:require('../assets/images/Commander.png'), name:CARD_COMMANDER},
